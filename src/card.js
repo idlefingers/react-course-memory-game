@@ -3,19 +3,11 @@ import classNames from "class-names"
 import "./card.css"
 
 export default class Card extends React.Component {
-  state = {
-    flipped: false
-  }
 
   handleClick = () => {
     if (this.props.canFlip) {
-      this.setState({ flipped: true })
-      this.props.onFlip(this.props.photo, this.handleUnflipRequest)
+      this.props.onFlip(this.props.id)
     }
-  }
-
-  handleUnflipRequest = () => {
-    this.setState({ flipped: false })
   }
 
   render() {
@@ -24,7 +16,7 @@ export default class Card extends React.Component {
         className="card"
         onClick={this.handleClick}>
         <div
-          className={classNames("image", { flipped: this.state.flipped })}
+          className={classNames("image", { flipped: this.props.isFlipped })}
           style={{ backgroundImage: `url(${this.props.photo})` }} />
       </div>
     )

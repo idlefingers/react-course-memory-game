@@ -1,4 +1,5 @@
 import React from "react"
+import uuid from "uuid/v4"
 import Card from "./card"
 import shuffle from "./shuffle"
 
@@ -21,20 +22,20 @@ export default class Game extends React.Component {
   }
 
   duplicatedAndShuffledCards = () => (
-    shuffle([...photos, ...photos])
+    shuffle([...photos, ...photos]).map(photo => ({
+      photo,
+      id: uuid()
+    }))
   )
 
-  handleCardFlip = (photo, unflipCallback) => {
-    const flippedCards = [...this.state.flippedCards, { photo, unflipCallback }]
+  handleCardFlip = cardId => {
+    const flippedCards = [...this.state.flippedCards, cardId]
     this.setState({ flippedCards }, this.handleFlippedCardChange)
   }
 
   handleFlippedCardChange = () => {
     if (this.state.flippedCards.length === 2) {
       setTimeout(() => {
-        this.state.flippedCards.forEach(card => {
-          card.unflipCallback()
-        })
         this.setState({ flippedCards: [] })
       }, 1000)
     }
@@ -45,9 +46,12 @@ export default class Game extends React.Component {
       <div>
         {this.state.cards.map(card => (
           <Card
+            key={card.id}
+            id={card.id}
             canFlip={this.state.flippedCards.length < 2}
             onFlip={this.handleCardFlip}
-            photo={card} />
+            isFlipped={this.state.flippedCards.indexOf(card.id) !== -1}
+            photo={card.photo} />
         ))}
       </div>
     )
