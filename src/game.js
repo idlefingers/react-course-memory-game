@@ -1,33 +1,18 @@
 import React from "react"
-import uuid from "uuid/v4"
 import SuccessMessage from "./success-message"
 import Card from "./card"
-import shuffle from "./shuffle"
+import { inject } from "mobx-react"
 
-const photos = [
-  "/images/dog-1.jpg",
-  "/images/dog-2.jpg",
-  "/images/dog-3.jpg",
-  "/images/dog-4.jpg",
-  "/images/dog-5.jpg"
-]
-
+@inject("gameStore")
 export default class Game extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      cards: this.duplicatedAndShuffledCards(),
+      cards: [],
       flippedCards: []
     }
   }
-
-  duplicatedAndShuffledCards = () => (
-    shuffle([...photos, ...photos]).map(photo => ({
-      photo,
-      id: uuid()
-    }))
-  )
 
   handleCardFlip = (photo, unflipCallback) => {
     const flippedCards = [...this.state.flippedCards, { photo, unflipCallback }]
@@ -66,9 +51,11 @@ export default class Game extends React.Component {
   }
 
   render() {
+    const { cards } = this.props.gameStore
+
     return (
       <div className="game">
-        {this.state.cards.map(card => (
+        {cards.map(card => (
           <Card
             key={card.id}
             canFlip={this.state.flippedCards.length < 2}
@@ -76,7 +63,7 @@ export default class Game extends React.Component {
             photo={card.photo} />
         ))}
 
-        {this.state.cards.length === 0 &&
+        {cards.length === 0 &&
           <div>
             <SuccessMessage />
             <button onClick={this.handleResetClick}>Reset</button>
