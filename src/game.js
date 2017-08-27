@@ -1,5 +1,6 @@
 import React from "react"
 import uuid from "uuid/v4"
+import SuccessMessage from "./success-message"
 import Card from "./card"
 import shuffle from "./shuffle"
 
@@ -57,9 +58,16 @@ export default class Game extends React.Component {
     this.setState({ flippedCards: [] })
   }
 
+  handleResetClick = () => {
+    this.setState({
+      cards: this.duplicatedAndShuffledCards(),
+      flippedCards: []
+    })
+  }
+
   render() {
     return (
-      <div>
+      <div className="game">
         {this.state.cards.map(card => (
           <Card
             key={card.id}
@@ -67,6 +75,12 @@ export default class Game extends React.Component {
             onFlip={this.handleCardFlip}
             photo={card.photo} />
         ))}
+
+        {this.state.cards.length === 0 &&
+          <div>
+            <SuccessMessage />
+            <button onClick={this.handleResetClick}>Reset</button>
+          </div>}
       </div>
     )
   }
