@@ -5,6 +5,10 @@
   background: white;
 }
 
+.card.isMatched {
+  visibility: hidden;
+}
+
 .card .image {
   width: 200px;
   height: 200px;

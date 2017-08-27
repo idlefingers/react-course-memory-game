@@ -1,28 +1,23 @@
 import React from "react"
 import classNames from "class-names"
 import "./card.css"
+import { inject, observer } from "mobx-react"
 
+@inject("gameStore") @observer
 export default class Card extends React.Component {
 
   handleClick = () => {
-    if (this.props.canFlip) {
-      this.props.card.flip()
-      this.props.onFlip(this.props.photo, this.handleUnflipRequest)
-    }
-  }
-
-  handleUnflipRequest = () => {
-    this.props.card.flip()
+    this.props.gameStore.flip(this.props.card)
   }
 
   render() {
     return (
       <div
-        className="card"
+        className={classNames("card", { isMatched: this.props.card.isMatched })}
         onClick={this.handleClick}>
         <div
           className={classNames("image", { flipped: this.props.card.flipped })}
-          style={{ backgroundImage: `url(${this.props.photo})` }} />
+          style={{ backgroundImage: `url(${this.props.card.photo})` }} />
       </div>
     )
   }
