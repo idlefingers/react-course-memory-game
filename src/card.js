@@ -6,14 +6,14 @@ export default class Card extends React.Component {
 
   handleClick = () => {
     if (this.props.canFlip) {
-      this.props.onFlip(this.props.id)
+      this.props.onFlip(this.props.id, this.props.photo)
     }
   }
 
   render() {
     return (
       <div
-        className="card"
+        className={classNames("card", { matched: this.props.isMatched })}
         onClick={this.handleClick}>
         <div
           className={classNames("image", { flipped: this.props.isFlipped })}

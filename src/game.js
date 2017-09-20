@@ -17,7 +17,8 @@ export default class Game extends React.Component {
     super(props)
     this.state = {
       cards: this.duplicatedAndShuffledCards(),
-      flippedCards: []
+      flippedCards: [],
+      matchedCards: []
     }
   }
 
@@ -28,18 +29,33 @@ export default class Game extends React.Component {
     }))
   )
 
-  handleCardFlip = cardId => {
-    const flippedCards = [...this.state.flippedCards, cardId]
+  handleCardFlip = (id, photo) => {
+    const flippedCards = [...this.state.flippedCards, { id, photo }]
     this.setState({ flippedCards }, this.handleFlippedCardChange)
   }
 
   handleFlippedCardChange = () => {
     if (this.state.flippedCards.length === 2) {
       setTimeout(() => {
-        this.setState({ flippedCards: [] })
+        if (this.state.flippedCards[0].photo === this.state.flippedCards[1].photo) {
+          console.log("Match")
+          const matchedCards = [...this.state.matchedCards, ...this.state.flippedCards]
+          this.setState({ matchedCards })
+        }
+        this.resetFlippedCards()
       }, 1000)
     }
   }
+
+  resetFlippedCards = () => {
+    this.setState({ flippedCards: [] })
+  }
+
+  cardIsFlipped = card =>
+    !!this.state.flippedCards.find(c => c.id === card.id)
+
+  cardIsMatched = card =>
+    !!this.state.matchedCards.find(c => c.id === card.id)
 
   render() {
     return (
@@ -50,7 +66,8 @@ export default class Game extends React.Component {
             id={card.id}
             canFlip={this.state.flippedCards.length < 2}
             onFlip={this.handleCardFlip}
-            isFlipped={this.state.flippedCards.indexOf(card.id) !== -1}
+            isFlipped={this.cardIsFlipped(card)}
+            isMatched={this.cardIsMatched(card)}
             photo={card.photo} />
         ))}
       </div>
