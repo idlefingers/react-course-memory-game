@@ -42,13 +42,9 @@ export default class Game extends React.Component {
           const matchedCards = [...this.state.matchedCards, ...this.state.flippedCards]
           this.setState({ matchedCards })
         }
-        this.resetFlippedCards()
+        this.setState({ flippedCards: [] })
       }, 1000)
     }
-  }
-
-  resetFlippedCards = () => {
-    this.setState({ flippedCards: [] })
   }
 
   cardIsFlipped = card =>
